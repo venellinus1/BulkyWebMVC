@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulkyWeb", "BulkyWeb\BulkyW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bulky.DataAccess", "Bulky.DataAccess\Bulky.DataAccess.csproj", "{EC670F68-7CAC-492F-8C49-E3F94FA6C0F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bulky.Utility", "Bulky.Utility\Bulky.Utility.csproj", "{4C361707-9E05-4F5D-AE03-0945C30C4C0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bulky.Models", "Bulky.Models\Bulky.Models.csproj", "{3ECD41EA-2F61-4D9B-BBBB-182EA58F3DC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{EC670F68-7CAC-492F-8C49-E3F94FA6C0F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC670F68-7CAC-492F-8C49-E3F94FA6C0F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC670F68-7CAC-492F-8C49-E3F94FA6C0F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C361707-9E05-4F5D-AE03-0945C30C4C0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C361707-9E05-4F5D-AE03-0945C30C4C0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C361707-9E05-4F5D-AE03-0945C30C4C0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C361707-9E05-4F5D-AE03-0945C30C4C0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ECD41EA-2F61-4D9B-BBBB-182EA58F3DC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ECD41EA-2F61-4D9B-BBBB-182EA58F3DC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ECD41EA-2F61-4D9B-BBBB-182EA58F3DC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ECD41EA-2F61-4D9B-BBBB-182EA58F3DC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
