@@ -13,7 +13,7 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
 {
     public IActionResult Index()
     {
-        var productList = unitOfWork.Product.GetAll().ToList();        
+        var productList = unitOfWork.Product.GetAll(includeProperties:"Category").ToList();        
         return View(productList);
     }
 
