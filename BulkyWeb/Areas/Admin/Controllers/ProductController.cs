@@ -32,6 +32,7 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
         };
         if (id == null || id == 0)
         {
+            //create
 			return View(productVM);
 		}
         else
