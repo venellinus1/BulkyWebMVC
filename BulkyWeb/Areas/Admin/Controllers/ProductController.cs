@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace BulkyWeb.Areas.Admin.Controllers;
 
 [Area("Admin")]
-public class ProductController(IUnitOfWork unitOfWork)
+public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
     : Controller
 {
     public IActionResult Index()
@@ -17,7 +17,7 @@ public class ProductController(IUnitOfWork unitOfWork)
         return View(productList);
     }
 
-    public IActionResult Create()
+    public IActionResult Upsert(int? id)
     {
         ProductVM productVM = new() 
         {
@@ -30,14 +30,35 @@ public class ProductController(IUnitOfWork unitOfWork)
 			}),
             Product = new Product()
         };
-		return View(productVM);
+        if (id == null || id == 0)
+        {
+			return View(productVM);
+		}
+        else
+        {
+            //update
+            productVM.Product = unitOfWork.Product.Get(p => p.Id == id);
+            return View(productVM);
+        }
     }
     [HttpPost]
-    public IActionResult Create(ProductVM productViewModel)
+    public IActionResult Upsert(ProductVM productViewModel, IFormFile? file)
     {        
         if (ModelState.IsValid)
         {
-            unitOfWork.Product.Add(productViewModel.Product);
+            string wwwRootPath = webHostEnvironment.WebRootPath;
+            if (file != null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                string productPath = Path.Combine(wwwRootPath, @"images\product");
+                using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+                productViewModel.Product.ImageUrl = @"\images\product\" + fileName;
+
+			}
+			unitOfWork.Product.Add(productViewModel.Product);
             unitOfWork.Save();
             TempData["success"] = "Product created successfully";
             return RedirectToAction("Index");
@@ -54,32 +75,6 @@ public class ProductController(IUnitOfWork unitOfWork)
 			return View(productViewModel);
 		}
         
-    }
-
-    public IActionResult Edit(int? id)
-    {
-        if (id == null || id == 0)
-        {
-            return NotFound();
-        }
-        Product? productFromDb = unitOfWork.Product.Get(c => c.Id == id);
-
-        if (productFromDb == null)
-            return NotFound();
-
-        return View(productFromDb);
-    }
-    [HttpPost]
-    public IActionResult Edit(Product product)
-    {        
-        if (ModelState.IsValid)
-        {
-            unitOfWork.Product.Update(product);
-            unitOfWork.Save();
-            TempData["success"] = "Product updated successfully";
-            return RedirectToAction("Index");
-        }
-        return View();
     }
 
     public IActionResult Delete(int? id)
