@@ -1,6 +1,7 @@
 ﻿using Bulky.Models;
 using Bulky.Models.Models;
 using Bulky.Models.ViewModels;
+using BulkyBook.DataAccess.Repository;
 using BulkyBook.DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -119,4 +120,12 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
         TempData["success"] = "Product deleted successfully";
         return RedirectToAction("Index");
     }
+    #region API CALLS
+    [HttpGet]
+    public IActionResult GetAll()
+    {
+        List<Product> objProductList = unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
+        return Json(new { data = objProductList });
+    }
+    #endregion
 }
