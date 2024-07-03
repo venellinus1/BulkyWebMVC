@@ -51,14 +51,31 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
             {
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                 string productPath = Path.Combine(wwwRootPath, @"images\product");
+                                
+                if (!string.IsNullOrEmpty(productViewModel.Product.ImageUrl))
+                {
+                    //image url is present -> delete the existing image
+                    var oldImagePath = Path.Combine(wwwRootPath, productViewModel.Product.ImageUrl.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldImagePath))
+                        System.IO.File.Delete(oldImagePath);
+                }
                 using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
                 {
                     file.CopyTo(fileStream);
                 }
                 productViewModel.Product.ImageUrl = @"\images\product\" + fileName;
-
 			}
-			unitOfWork.Product.Add(productViewModel.Product);
+            if (productViewModel.Product.Id == 0)
+            {
+                //adding new image
+				unitOfWork.Product.Add(productViewModel.Product);
+			}
+            else
+            {
+				//updating existing image
+				unitOfWork.Product.Update(productViewModel.Product);
+			}
+			
             unitOfWork.Save();
             TempData["success"] = "Product created successfully";
             return RedirectToAction("Index");

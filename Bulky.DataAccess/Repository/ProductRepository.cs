@@ -25,7 +25,10 @@ public class ProductRepository : Repository<Product>, IProductRepository
             objFromDb.Price100 = product.Price100;
             objFromDb.Description = product.Description;
             objFromDb.Author = product.Author;
-            
+            if (objFromDb.ImageUrl != null)
+            {
+                objFromDb.ImageUrl = objFromDb.ImageUrl;
+            }
         }
     }
 }
