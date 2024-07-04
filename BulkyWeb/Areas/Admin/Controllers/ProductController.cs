@@ -5,6 +5,7 @@ using BulkyBook.DataAccess.Repository;
 using BulkyBook.DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace BulkyWeb.Areas.Admin.Controllers;
 
@@ -96,36 +97,29 @@ public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHo
         
     }
 
-    public IActionResult Delete(int? id)
-    {
-        if (id == null || id == 0)
-        {
-            return NotFound();
-        }
-        Product? productromDb = unitOfWork.Product.Get(c => c.Id == id);
-
-        if (productromDb == null)
-            return NotFound();
-
-        return View(productromDb);
-    }
-    [HttpPost, ActionName("Delete")]
-    public IActionResult DeletePost(int? id)
-    {
-        Product? product = unitOfWork.Product.Get(c => c.Id == id);
-        if (product == null)
-            return NotFound();
-        unitOfWork.Product.Remove(product);
-        unitOfWork.Save();
-        TempData["success"] = "Product deleted successfully";
-        return RedirectToAction("Index");
-    }
+    
     #region API CALLS
     [HttpGet]
     public IActionResult GetAll()
     {
         List<Product> objProductList = unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
         return Json(new { data = objProductList });
+    }
+
+    public IActionResult Delete(int? id)
+    {
+        var productToDelete = unitOfWork.Product.Get(p => p.Id == id);
+        if(productToDelete == null)
+        {
+            return Json(new { success = false, message = "Error while deleting"});
+        }
+        var oldImagePath = Path.Combine(webHostEnvironment.WebRootPath, productToDelete.ImageUrl.TrimStart('\\'));
+        if (System.IO.File.Exists(oldImagePath))
+            System.IO.File.Delete(oldImagePath);
+        unitOfWork.Product.Remove(productToDelete);
+        unitOfWork.Save();
+
+        return Json(new { success = true, message = "Delete Successful" });
     }
     #endregion
 }
