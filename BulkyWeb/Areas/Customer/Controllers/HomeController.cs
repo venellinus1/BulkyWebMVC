@@ -12,20 +12,19 @@ public class HomeController
     (ILogger<HomeController> logger, IUnitOfWork unitOfWork)
     : Controller
 {
-    //private readonly ILogger<HomeController> _logger;
-
-    //public HomeController(ILogger<HomeController> logger)
-    //{
-    //    _logger = logger;
-    //}
-
+    
     public IActionResult Index()
     {
         IEnumerable<Product> productList = unitOfWork.Product.GetAll(includeProperties: "Category");
         return View(productList);
     }
+	public IActionResult Details(int productId)
+	{
+		Product product = unitOfWork.Product.Get(p => p.Id == productId, includeProperties: "Category");
+		return View(product);
+	}
 
-    public IActionResult Privacy()
+	public IActionResult Privacy()
     {
         return View();
     }
