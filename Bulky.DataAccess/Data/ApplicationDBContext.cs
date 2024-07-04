@@ -1,10 +1,12 @@
 ﻿using Bulky.Models;
 using Bulky.Models.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bulky.DataAccess.Data;
 
-public class ApplicationDBContext : DbContext
+public class ApplicationDBContext : IdentityDbContext<IdentityUser>
 {
     public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
     {
@@ -15,6 +17,7 @@ public class ApplicationDBContext : DbContext
     public DbSet<Product> Products { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //this is important - keys of identity tables are mapped in the OnModelCreating, otherwise there will be err msg in Repository ctr
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Category>().HasData(
