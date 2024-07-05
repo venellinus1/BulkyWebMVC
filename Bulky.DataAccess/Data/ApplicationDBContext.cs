@@ -15,6 +15,7 @@ public class ApplicationDBContext : IdentityDbContext<IdentityUser>
 
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         //this is important - keys of identity tables are mapped in the OnModelCreating, otherwise there will be err msg in Repository ctr
