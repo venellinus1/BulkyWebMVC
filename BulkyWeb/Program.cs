@@ -18,7 +18,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(option =>
 
 //<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDBContext>();
-
+builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
@@ -37,6 +37,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
