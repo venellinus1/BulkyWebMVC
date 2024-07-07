@@ -1,8 +1,10 @@
 ﻿using Bulky.Models;
 using Bulky.Models.Models;
 using Bulky.Models.ViewModels;
+using Bulky.Utility;
 using BulkyBook.DataAccess.Repository;
 using BulkyBook.DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Runtime.InteropServices.Marshalling;
@@ -10,6 +12,7 @@ using System.Runtime.InteropServices.Marshalling;
 namespace BulkyWeb.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = StaticDetails.Role_Admin)]
 public class ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
     : Controller
 {
