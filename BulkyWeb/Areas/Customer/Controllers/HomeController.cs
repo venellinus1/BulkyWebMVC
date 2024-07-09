@@ -1,6 +1,7 @@
 
 using Bulky.Models;
 using Bulky.Models.Models;
+using BulkyBook.DataAccess.Repository;
 using BulkyBook.DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,8 +38,24 @@ public class HomeController
         var claimsIdentity = (ClaimsIdentity)User.Identity;
         var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
         shoppingCart.ApplicationUserId = userId;
-        unitOfWork.ShoppingCart.Add(shoppingCart);
-        unitOfWork.Save();
+
+        ShoppingCart cartFromDb = unitOfWork.ShoppingCart.Get(u => u.ApplicationUserId == userId &&
+        u.ProductId == shoppingCart.ProductId);
+
+        if (cartFromDb != null)
+        {
+            //shopping cart exists
+            cartFromDb.Count += shoppingCart.Count;
+            unitOfWork.ShoppingCart.Update(cartFromDb);
+            unitOfWork.Save();
+        }
+        else
+        {
+            //add cart record
+            unitOfWork.ShoppingCart.Add(shoppingCart);
+            unitOfWork.Save();
+        }
+        
         return RedirectToAction(nameof(Index));
     }
 
