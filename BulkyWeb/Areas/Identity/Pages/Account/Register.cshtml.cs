@@ -168,6 +168,11 @@ public class RegisterModel : PageModel
             user.PostalCode = Input.PostalCode;
             user.State = Input.State;
             user.PhoneNumber = Input.PhoneNumber;
+
+            if (Input.Role == StaticDetails.Role_Company)
+            {
+                user.CompanyId = Input.CompanyId;
+            }
             var result = await _userManager.CreateAsync(user, Input.Password);
 
             if (result.Succeeded)
