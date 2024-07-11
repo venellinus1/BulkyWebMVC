@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace BulkyWeb.Areas.Customer.Controllers;
 
-[Area("Customer")]
+[Area("customer")]
 [Authorize]
 public class ShoppingCartController
     (IUnitOfWork unitOfWork)
@@ -118,11 +118,11 @@ public class ShoppingCartController
         {
             //regular customer account - need to capture payment
             //Stripe logic ToDo
-            var domain = "https://localhos:7169";
+            var domain = "https://localhost:7167";
             var options = new SessionCreateOptions
             {
-                SuccessUrl = domain + $"/customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
-                CancelUrl = domain + $"/customer/cart/index",
+                SuccessUrl = domain + $"/customer/shoppingcart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
+                CancelUrl = domain + $"/customer/shoppingcart/index",
 				LineItems = new List<SessionLineItemOptions>(),
                 Mode = "payment",
             };
@@ -155,6 +155,22 @@ public class ShoppingCartController
 
 	public IActionResult OrderConfirmation(int id)
     {
+        OrderHeader orderHeader = unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+        if (orderHeader.PaymentStatus != StaticDetails.PaymentStatusDelayedPayment)
+        {
+            var service = new SessionService();
+            Session session = service.Get(orderHeader.SessionId);
+            if (session.PaymentStatus.ToLower() == "paid")
+            {
+                unitOfWork.OrderHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
+                unitOfWork.OrderHeader.UpdateStatus(id, StaticDetails.StatusApproved, StaticDetails.PaymentStatusApproved);
+                unitOfWork.Save();
+            }
+        }
+        List<ShoppingCart> shoppingCarts = unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
+        unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+        unitOfWork.Save();
+
         return View(id);
     }
 	public IActionResult Plus(int cartId)
