@@ -1,4 +1,4 @@
-﻿﻿@{
+﻿@{
     var status = Context.Request.Query["status"];
     var pending = "text-primary";
     var inprocess = "text-primary";
@@ -23,8 +23,12 @@
         default:
             all = "active text-white bg-primary";
             break;
+
     }
+
 }
+
+
 <div class="card shadow border-0 my-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-3">
         <div class="row">
