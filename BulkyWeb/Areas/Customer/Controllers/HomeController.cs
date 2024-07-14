@@ -1,9 +1,11 @@
 
 using Bulky.Models;
 using Bulky.Models.Models;
+using Bulky.Utility;
 using BulkyBook.DataAccess.Repository;
 using BulkyBook.DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -46,15 +48,20 @@ public class HomeController
         {
             //shopping cart exists
             cartFromDb.Count += shoppingCart.Count;
-            unitOfWork.ShoppingCart.Update(cartFromDb);            
+            unitOfWork.ShoppingCart.Update(cartFromDb);
+            unitOfWork.Save();
         }
         else
         {
             //add cart record
             unitOfWork.ShoppingCart.Add(shoppingCart);
+            unitOfWork.Save();
+            HttpContext.Session.SetInt32(
+                StaticDetails.SessionCart, 
+                unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).Count());
         }
         TempData["success"] = "Cart updated successfully";
-        unitOfWork.Save();
+        
         return RedirectToAction(nameof(Index));
     }
 
