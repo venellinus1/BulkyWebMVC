@@ -183,10 +183,12 @@ public class ShoppingCartController
     }
     public IActionResult Minus(int cartId)
     {
-        var cartFromDb = unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+        var cartFromDb = unitOfWork.ShoppingCart.Get(u => u.Id == cartId, tracked: true);
         if (cartFromDb.Count <= 1)
         {
             //remove item from cart
+            HttpContext.Session.SetInt32(StaticDetails.SessionCart,
+                unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
             unitOfWork.ShoppingCart.Remove(cartFromDb);
         } else
         {
@@ -200,8 +202,11 @@ public class ShoppingCartController
 
     public IActionResult Remove(int cartId)
     {
-        var cartFromDb = unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+        var cartFromDb = unitOfWork.ShoppingCart.Get(u => u.Id == cartId, tracked: true);
         unitOfWork.ShoppingCart.Remove(cartFromDb);
+        HttpContext.Session.SetInt32(StaticDetails.SessionCart, 
+            unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
+
         unitOfWork.Save();
         return RedirectToAction(nameof(Index));
     }

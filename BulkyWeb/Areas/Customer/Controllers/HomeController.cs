@@ -42,7 +42,7 @@ public class HomeController
         shoppingCart.ApplicationUserId = userId;
 
         ShoppingCart cartFromDb = unitOfWork.ShoppingCart.Get(u => u.ApplicationUserId == userId &&
-        u.ProductId == shoppingCart.ProductId);
+            u.ProductId == shoppingCart.ProductId);
 
         if (cartFromDb != null)
         {
@@ -56,12 +56,11 @@ public class HomeController
             //add cart record
             unitOfWork.ShoppingCart.Add(shoppingCart);
             unitOfWork.Save();
-            HttpContext.Session.SetInt32(
-                StaticDetails.SessionCart, 
+            HttpContext.Session.SetInt32(StaticDetails.SessionCart,
                 unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).Count());
         }
         TempData["success"] = "Cart updated successfully";
-        
+
         return RedirectToAction(nameof(Index));
     }
 
