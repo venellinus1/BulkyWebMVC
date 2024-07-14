@@ -166,6 +166,7 @@ public class ShoppingCartController
                 unitOfWork.OrderHeader.UpdateStatus(id, StaticDetails.StatusApproved, StaticDetails.PaymentStatusApproved);
                 unitOfWork.Save();
             }
+            HttpContext.Session.Clear();
         }
         List<ShoppingCart> shoppingCarts = unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
         unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
