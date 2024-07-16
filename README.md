@@ -2,15 +2,25 @@
 The project is about ECommerce website selling books
 
 **Technical details:**
+
 **Entity Framework** with code first migrations
+
 **Sessions** in ASP NET Core
+
 **View Components** and **Partial Views** in ASP NET Core
+
 Custom **Tag Helpers** in ASP NET Core
+
 **Authentication** and **Authorization** in ASP NET Core
+
 **Role Management** in ASP NET Core Identity
+
 **TempData/ViewBag/ViewData** in ASP NET Core
+
 **Stripe** Payment Integrations
+
 **Repository Pattern** to Access Database
+
 Seed Database Migrations Automatically
 
 Bootstrap v5
